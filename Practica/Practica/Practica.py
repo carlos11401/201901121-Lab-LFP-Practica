@@ -1,18 +1,15 @@
 import json
 import sys
+from io import open
 
 print('Bienvenido usa Algun Comando')
 salir = False
 while salir==False:
     comando = input()     # lo que va ha ingresar el usuario
     comando = comando.replace(",","")   #remplazando comas por nada jeje
-    ListaTextoComando = comando.split(" ")     #separando cada palabra en una lista
+    global ListaTextoComando 
+    ListaTextoComando= comando.split(" ")     #separando cada palabra en una lista
     cantidadArchivos = len(ListaTextoComando)   #numero de palabras 
-
-    
-
-    
-         # donde se guardaran los archivos
 
     if ListaTextoComando[0] == "CARGAR":         #verificar comando
 
@@ -29,16 +26,21 @@ while salir==False:
     print(len(listaArchivos))
 
     if ListaTextoComando[0] == "SELECCIONAR*": 
-        print(len(listaArchivos))
 
-        print("Nombre                Edad               Activo            Promedio")
+        print("Nombre           Edad       Activo       Promedio")
 
         contador2 = 0
         
         while contador2 < len(listaArchivos):
-            print(listaArchivos[contador2])
-            #archivoJSON = listaArchivos[contador2]
-            #print(archivoJSON.get('nombre'))
+            archivoJSON = listaArchivos[contador2] #recorriendo los archivos
+            cantidadRegistros = len(archivoJSON)   #numero de registros
+
+            contador = 0
+
+            while contador < cantidadRegistros: 
+                registro = archivoJSON[contador]      #en var "registro" estaran los registro de los archivos
+                print(registro["nombre"],'           ',registro["edad"],'       ',registro["activo"],'       ',registro["promedio"])
+                contador= contador + 1
             contador2 = contador2 + 1
 
     if ListaTextoComando[0] == "SALIR":

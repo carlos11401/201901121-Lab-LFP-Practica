@@ -1,0 +1,26 @@
+[
+    {
+        "nombre": "4.1",
+        "edad": 25,
+        "activo": true,
+        "promedio": 80
+    },
+	{
+        "nombre": "4.2",
+        "edad": 50,
+        "activo": true,
+        "promedio": 46
+    },
+	{
+        "nombre": "4.3",
+        "edad": 70,
+        "activo": false,
+        "promedio": 20
+    },
+	{
+        "nombre": "4.4",
+        "edad": 4,
+        "activo": true,
+        "promedio": 50
+    }
+]

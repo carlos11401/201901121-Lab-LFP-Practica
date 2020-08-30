@@ -1,26 +1,26 @@
 [
     {
-        "nombre": "4.1",
-        "edad": 25,
+        "nombre": "registro 4.1",
+        "edad": 40,
         "activo": true,
-        "promedio": 80
+        "promedio": 45
     },
 	{
-        "nombre": "4.2",
-        "edad": 50,
+        "nombre": "registro 4.2",
+        "edad": 41,
         "activo": true,
         "promedio": 46
     },
 	{
-        "nombre": "4.3",
-        "edad": 70,
+        "nombre": "registro 4.3",
+        "edad": 42,
         "activo": false,
-        "promedio": 20
+        "promedio": 47
     },
 	{
-        "nombre": "4.4",
-        "edad": 4,
+        "nombre": "registro 4.4",
+        "edad": 43,
         "activo": true,
-        "promedio": 50
+        "promedio": 49
     }
 ]

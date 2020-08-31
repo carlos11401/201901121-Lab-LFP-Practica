@@ -20,6 +20,7 @@ while salir==False:
     comandCuenta = "cuenta"
     comandMax = "maximo"
     comandMin = "minimo"
+    comandSuma = "suma"
     
 
     if comand.lower() == comandCargar.lower():         #verificar comando CARGAR
@@ -147,6 +148,28 @@ while salir==False:
 
             listaNumeros = sorted(listaNumeros)   #se ordeno la lista, donde el valor MIN esta en la primera posicion
             print("-->",atributo," MIN : ",listaNumeros[0])
+
+    if comand.lower() == comandSuma.lower():         #verificar comando SUMA
+        if len(ListaTextoComando) > 2:
+            print("Ha Ocurrido un Error :(")
+        else:
+            atributo = ListaTextoComando[1]
+            contador3 = 0
+            
+            sumaAtributos = 0  #en esta variable se iran sumando los datos
+            while contador3 < len(listaArchivos):
+                archivoJSON = listaArchivos[contador3] #recorriendo los archivos
+                cantidadRegistros = len(archivoJSON)   #numero de registros
+                
+                contador = 0
+                
+                while contador < cantidadRegistros:    #recorriendo los registros de cada archivo
+                    registro = archivoJSON[contador]      #en var "registro" estaran los registro de los archivos
+                    sumaAtributos = sumaAtributos + int(registro[atributo])   #agregando cada dato del atributo a la lista
+                    contador = contador + 1
+                contador3 = contador3 + 1
+
+            print("Suma de ",atributo," : ",sumaAtributos)
 
     if comand.lower() == comandCuenta.lower():         #verificar comando
         print("funciona")

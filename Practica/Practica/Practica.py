@@ -13,7 +13,12 @@ while salir==False:
     ListaTextoComando= comando.split(" ")     #separando cada palabra en una lista
     cantidadArchivos = len(ListaTextoComando)   #numero de palabras 
 
-    if ListaTextoComando[0] == "CARGAR":         #verificar comando
+    comand = ListaTextoComando[0]    #guardando los comandos
+    comandCargar = "cargar"
+    comandSeleccionarAll = "seleccionar*"
+    comandSeleccionar = "seleccionar"
+
+    if comand.lower() == comandCargar.lower():         #verificar comando
 
         global listaArchivos   #lista donde se guardaran los archivos
         listaArchivos = []
@@ -27,12 +32,33 @@ while salir==False:
             contador = contador+1
     print(len(listaArchivos))
 
-    if ListaTextoComando[0] == "SELECCIONAR":
-        if re.search("DONDE",comando):
-            patron = r'"(.*?)"'     #para quitar comillas a algun texto
-            palabraBuscada = re.findall(patron,comando)   #aqui se almacena la palabra que queremos buscar
+    if comand.lower() == comandSeleccionar.lower():
+        comandoDonde = "donde"
+        if re.search(comandoDonde.lower(),comando):
+
+            condiciones = re.findall(r'SELECCIONAR (.*?) DONDE',comando)   #obtener las condiciones para la busqueda
+            condiciones = " ".join(condiciones)
+            condiciones = condiciones.split(" ")
+
+
+            atributo = re.findall(r'DONDE (.*?) =',comando)   #obteniendo el tipo de atributo que vamos a buscar
+            atributo = atributo[0]
+
+            if atributo== "nombre":
+                patron = r'"(.*?)"'     #para quitar comillas a algun texto               
+                palabraBuscada = re.findall(patron,comando)   #aqui se almacena el nombre que queremos buscar
+                palabraBuscada = palabraBuscada[0]
+            else:
+                if atributo == "activo":
+                    numeroPalabrasTextoComando = len(ListaTextoComando)
+                    palabraBuscada = ListaTextoComando[numeroPalabrasTextoComando-1]
+                    palabraBuscada = str_to_bool(palabraBuscada)    #aqui se almacena el activo que queremos buscar ya convertido a bool
+                else:
+                    numeroPalabrasTextoComando = len(ListaTextoComando)
+                    palabraBuscada = int(ListaTextoComando[numeroPalabrasTextoComando-1])#aqui se almacena el numero que queremos buscar
 
             contador3 = 0
+
             while contador3 < len(listaArchivos):
                 archivoJSON = listaArchivos[contador3] #recorriendo los archivos
                 cantidadRegistros = len(archivoJSON)   #numero de registros
@@ -40,16 +66,20 @@ while salir==False:
 
                 while contador < cantidadRegistros:    #recorriendo los registros de cada archivo
                     registro = archivoJSON[contador]      #en var "registro" estaran los registro de los archivos
-                    if registro["nombre"] == palabraBuscada[0]:   #comparando las palabras
-                        print(registro["nombre"],"     ",registro["edad"],"     ",registro["activo"],"     ",registro["promedio"])
-                        contador= cantidadRegistros + 1
-                        contador3 = len(listaArchivos)     #para que despues no siga buscando cuando ya encontro la coincidencia
+
+                    if registro[atributo] == palabraBuscada:   #comparando las palabras
+                        contador2 = 0
+                        while contador2 <len(condiciones):
+                            print(condiciones[contador2],": ",registro[condiciones[contador2]])
+                            contador2 = contador2 + 1
+
                     contador = contador +1
                 contador3 = contador3 + 1
         
         else:
             print("Ha ocurrido un error")
-    if ListaTextoComando[0] == "SELECCIONAR*": 
+
+    if comand.lower() == comandSeleccionarAll.lower(): 
 
         print("Nombre           Edad       Activo       Promedio")
 
@@ -69,3 +99,13 @@ while salir==False:
 
     if ListaTextoComando[0] == "SALIR":
         break
+
+    if ListaTextoComando[0] == "P":               #comprobando que el DEF devuelva la cantidad de atributos
+        tamaño = cantidadAtributos(r'nombre',comando)
+        print(tamaño)
+
+    def str_to_bool(dato):   #para convertir el dato de texto activo a bool
+        if dato == "true":
+            return True
+        else:
+            return False

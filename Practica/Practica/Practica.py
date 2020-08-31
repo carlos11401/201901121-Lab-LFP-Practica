@@ -3,7 +3,7 @@ import sys
 import re
 
 print('Bienvenido usa Algun Comando --->  ') 
-print('(CARGAR)-(SELECCIONAR)-(SELECCIONAR*)-(SALIR)')
+print('(CARGAR)-(SELECCIONAR)-(SELECCIONAR*)-(SALIR)-(CUENTA)')
 salir = False
 while salir==False:
     global comando
@@ -17,9 +17,12 @@ while salir==False:
     comandCargar = "cargar"
     comandSeleccionarAll = "seleccionar*"
     comandSeleccionar = "seleccionar"
+    comandCuenta = "cuenta"
+    comandMax = "maximo"
+    comandMin = "minimo"
     
 
-    if comand.lower() == comandCargar.lower():         #verificar comando
+    if comand.lower() == comandCargar.lower():         #verificar comando CARGAR
 
         global listaArchivos   #lista donde se guardaran los archivos
         listaArchivos = []
@@ -31,9 +34,8 @@ while salir==False:
             listaArchivos.append(datos_de_archivo)     #guardando archivo en lista
             print("Se ha Cargado en Memoria : "+ListaTextoComando[contador])
             contador = contador+1
-    print(len(listaArchivos))
 
-    if comand.lower() == comandSeleccionar.lower():
+    if comand.lower() == comandSeleccionar.lower():  #verificar comando SELECCIONAR
         Donde = "donde"
         condiciones = re.findall(r' (.*?) =',comando)   #obtener las condiciones para la busqueda
         condiciones = " ".join(condiciones)
@@ -82,7 +84,7 @@ while salir==False:
         else:
             print("Ha ocurrido un error")
 
-    if comand.lower() == comandSeleccionarAll.lower(): 
+    if comand.lower() == comandSeleccionarAll.lower(): #verificar comando SELECCIONAR*
 
         print("Nombre           Edad       Activo       Promedio")
 
@@ -100,12 +102,66 @@ while salir==False:
                 contador= contador + 1
             contador2 = contador2 + 1
 
+    if comand.lower() == comandMax.lower():         #verificar comando MAXIMO
+        if len(ListaTextoComando) > 2:
+            print("Ha Ocurrido un Error :(")
+        else:
+            atributo = ListaTextoComando[1]
+            contador3 = 0
+            
+            listaNumeros  = []  #lista donde se guardara cada dato del atributo
+            while contador3 < len(listaArchivos):
+                archivoJSON = listaArchivos[contador3] #recorriendo los archivos
+                cantidadRegistros = len(archivoJSON)   #numero de registros
+                
+                contador = 0
+                
+                while contador < cantidadRegistros:    #recorriendo los registros de cada archivo
+                    registro = archivoJSON[contador]      #en var "registro" estaran los registro de los archivos
+                    listaNumeros.append(registro[atributo])   #agregando cada dato del atributo a una lista para despues ordenarla
+                    contador = contador + 1
+                contador3 = contador3 + 1
+
+            listaNumeros = sorted(listaNumeros)   #se ordeno la lista, donde el valor MAX esta en la ultima posicion
+            print("-->",atributo," MAX : ",listaNumeros[len(listaNumeros)-1])
+
+    if comand.lower() == comandMin.lower():         #verificar comando MINIMO
+        if len(ListaTextoComando) > 2:
+            print("Ha Ocurrido un Error :(")
+        else:
+            atributo = ListaTextoComando[1]
+            contador3 = 0
+            
+            listaNumeros  = []  #lista donde se guardara cada dato del atributo
+            while contador3 < len(listaArchivos):
+                archivoJSON = listaArchivos[contador3] #recorriendo los archivos
+                cantidadRegistros = len(archivoJSON)   #numero de registros
+                
+                contador = 0
+                
+                while contador < cantidadRegistros:    #recorriendo los registros de cada archivo
+                    registro = archivoJSON[contador]      #en var "registro" estaran los registro de los archivos
+                    listaNumeros.append(registro[atributo])   #agregando cada dato del atributo a una lista para despues ordenarla
+                    contador = contador + 1
+                contador3 = contador3 + 1
+
+            listaNumeros = sorted(listaNumeros)   #se ordeno la lista, donde el valor MIN esta en la primera posicion
+            print("-->",atributo," MIN : ",listaNumeros[0])
+
+    if comand.lower() == comandCuenta.lower():         #verificar comando
+        print("funciona")
+        contador = 0
+        cantidadRegistros = 0
+        while contador < len(listaArchivos):
+            archivoJSON = listaArchivos[contador] #recorriendo los archivos
+            cantidadRegistros = cantidadRegistros + len(archivoJSON)   #numero de registros
+            contador = contador + 1
+
+        print("Cantidad de Registros: ",cantidadRegistros)
+
     if ListaTextoComando[0] == "SALIR":
         break
 
-    if ListaTextoComando[0] == "P":               #comprobando que el DEF devuelva la cantidad de atributos
-        tamaño = cantidadAtributos(r'nombre',comando)
-        print(tamaño)
 
     def str_to_bool(dato):   #para convertir el dato de texto activo a bool
         if dato == "true":

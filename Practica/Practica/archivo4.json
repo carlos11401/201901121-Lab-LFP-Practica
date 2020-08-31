@@ -7,7 +7,7 @@
     },
 	{
         "nombre": "registro 4.2",
-        "edad": 41,
+        "edad": 1,
         "activo": true,
         "promedio": 46
     },
@@ -15,7 +15,7 @@
         "nombre": "registro 4.3",
         "edad": 42,
         "activo": false,
-        "promedio": 47
+        "promedio": 400
     },
 	{
         "nombre": "registro 4.4",

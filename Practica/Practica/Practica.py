@@ -2,7 +2,7 @@ import json
 import sys
 import re
 
-print('Bienvenido usa Algun Comando --->  ')
+print('Bienvenido usa Algun Comando --->  ') 
 print('(CARGAR)-(SELECCIONAR)-(SELECCIONAR*)-(SALIR)')
 salir = False
 while salir==False:
@@ -17,6 +17,7 @@ while salir==False:
     comandCargar = "cargar"
     comandSeleccionarAll = "seleccionar*"
     comandSeleccionar = "seleccionar"
+    
 
     if comand.lower() == comandCargar.lower():         #verificar comando
 
@@ -33,16 +34,16 @@ while salir==False:
     print(len(listaArchivos))
 
     if comand.lower() == comandSeleccionar.lower():
-        comandoDonde = "donde"
-        if re.search(comandoDonde.lower(),comando):
+        Donde = "donde"
+        condiciones = re.findall(r' (.*?) =',comando)   #obtener las condiciones para la busqueda
+        condiciones = " ".join(condiciones)
+        condiciones = condiciones.split(" ")  #recordar omitir los ultimos 2 datos de la lista que sera DONDE ATRIBUTO
 
-            condiciones = re.findall(r'SELECCIONAR (.*?) DONDE',comando)   #obtener las condiciones para la busqueda
-            condiciones = " ".join(condiciones)
-            condiciones = condiciones.split(" ")
+        comandDonde = condiciones[len(condiciones)-2]  #obteniendo el comando DONDE
 
+        if Donde.lower()==comandDonde.lower():
 
-            atributo = re.findall(r'DONDE (.*?) =',comando)   #obteniendo el tipo de atributo que vamos a buscar
-            atributo = atributo[0]
+            atributo = condiciones[len(condiciones)-1]  #obteniendo el tipo de atributo que vamos a buscar
 
             if atributo== "nombre":
                 patron = r'"(.*?)"'     #para quitar comillas a algun texto               
@@ -58,7 +59,7 @@ while salir==False:
                     palabraBuscada = int(ListaTextoComando[numeroPalabrasTextoComando-1])#aqui se almacena el numero que queremos buscar
 
             contador3 = 0
-
+            print("......................................")
             while contador3 < len(listaArchivos):
                 archivoJSON = listaArchivos[contador3] #recorriendo los archivos
                 cantidadRegistros = len(archivoJSON)   #numero de registros
@@ -66,14 +67,16 @@ while salir==False:
 
                 while contador < cantidadRegistros:    #recorriendo los registros de cada archivo
                     registro = archivoJSON[contador]      #en var "registro" estaran los registro de los archivos
-
+                    ponerPuntos = False
                     if registro[atributo] == palabraBuscada:   #comparando las palabras
+                        ponerPuntos = True     #para imprimir adorno
                         contador2 = 0
-                        while contador2 <len(condiciones):
+                        while contador2 <(len(condiciones)-2):
                             print(condiciones[contador2],": ",registro[condiciones[contador2]])
                             contador2 = contador2 + 1
-
                     contador = contador +1
+                if ponerPuntos==True: print("......................................") 
+                else: ponerPuntos=False
                 contador3 = contador3 + 1
         
         else:

@@ -2,8 +2,8 @@ import json
 import sys
 import re
 
-print('Bienvenido usa Algun Comando --->  ') 
-print('(CARGAR)-(SELECCIONAR)-(SELECCIONAR*)-(SALIR)-(CUENTA)')
+print('--------------------> Bienvenido usa Algun Comando <------------------------  ') 
+print('\n(CARGAR)-(SELECCIONAR)-(SELECCIONAR*)-(SUMA)-(MAXIMO)-(MINIMO)-(REPORTAR)-(SALIR) \n')
 salir = False
 while salir==False:
     global comando
@@ -24,17 +24,27 @@ while salir==False:
     
 
     if comand.lower() == comandCargar.lower():         #verificar comando CARGAR
-
+        
         global listaArchivos   #lista donde se guardaran los archivos
         listaArchivos = []
         contador = 1
-        while contador < cantidadArchivos:
-            archivo = open(ListaTextoComando[contador]+".json").read()   #tomando de la lista de palabras el archivo omitiendo la posicion [0] que es de CARGAR
-            datos_de_archivo = json.loads(archivo)
 
-            listaArchivos.append(datos_de_archivo)     #guardando archivo en lista
-            print("Se ha Cargado en Memoria : "+ListaTextoComando[contador])
+        print("")
+        
+        while contador < cantidadArchivos:
+            
+            try:
+                archivo = open(ListaTextoComando[contador]+".json").read()   #tomando de la lista de palabras el archivo omitiendo la posicion [0] que es de CARGAR
+               
+                datos_de_archivo = json.loads(archivo)
+
+                listaArchivos.append(datos_de_archivo)     #guardando archivo en lista
+                print("---> Se ha Cargado en Memoria : "+ListaTextoComando[contador])
+                
+            except Exception as e:
+                print("\n         No se ha Podido Acceder al Archivo: ","'",ListaTextoComando[contador],".json","'"," :(  <----- (ERROR) \n") 
             contador = contador+1
+        print("")
 
     if comand.lower() == comandSeleccionar.lower():  #verificar comando SELECCIONAR
         Donde = "donde"
@@ -52,17 +62,16 @@ while salir==False:
                 patron = r'"(.*?)"'     #para quitar comillas a algun texto               
                 palabraBuscada = re.findall(patron,comando)   #aqui se almacena el nombre que queremos buscar
                 palabraBuscada = palabraBuscada[0]
-            else:
-                if atributo == "activo":
-                    numeroPalabrasTextoComando = len(ListaTextoComando)
-                    palabraBuscada = ListaTextoComando[numeroPalabrasTextoComando-1]
-                    palabraBuscada = str_to_bool(palabraBuscada)    #aqui se almacena el activo que queremos buscar ya convertido a bool
-                else:
-                    numeroPalabrasTextoComando = len(ListaTextoComando)
-                    palabraBuscada = int(ListaTextoComando[numeroPalabrasTextoComando-1])#aqui se almacena el numero que queremos buscar
+            if atributo == "activo":
+                numeroPalabrasTextoComando = len(ListaTextoComando)
+                palabraBuscada = ListaTextoComando[numeroPalabrasTextoComando-1]
+                palabraBuscada = str_to_bool(palabraBuscada)    #aqui se almacena el activo que queremos buscar ya convertido a bool
+            if atributo == "edad" or atributo == "promedio":
+                numeroPalabrasTextoComando = len(ListaTextoComando)
+                palabraBuscada = int(ListaTextoComando[numeroPalabrasTextoComando-1])#aqui se almacena el numero que queremos buscar
 
             contador3 = 0
-            print("......................................")
+            print(".......................................................................................................")
             while contador3 < len(listaArchivos):
                 archivoJSON = listaArchivos[contador3] #recorriendo los archivos
                 cantidadRegistros = len(archivoJSON)   #numero de registros
@@ -71,19 +80,27 @@ while salir==False:
                 while contador < cantidadRegistros:    #recorriendo los registros de cada archivo
                     registro = archivoJSON[contador]      #en var "registro" estaran los registro de los archivos
                     ponerPuntos = False
-                    if registro[atributo] == palabraBuscada:   #comparando las palabras
-                        ponerPuntos = True     #para imprimir adorno
-                        contador2 = 0
-                        while contador2 <(len(condiciones)-2):
-                            print(condiciones[contador2],": ",registro[condiciones[contador2]])
-                            contador2 = contador2 + 1
+
+                    try:
+                        if registro[atributo] == palabraBuscada:   #comparando las palabras
+                            ponerPuntos = True     #para imprimir adorno
+                            contador2 = 0
+                        
+                            while contador2 <(len(condiciones)-2):
+                                try:
+                                    print("--->",condiciones[contador2],": ",registro[condiciones[contador2]])
+                                except Exception as e: print("       No se ha Encontrado el Atributo: ","'",condiciones[contador2],"'"," :(  <-----(ERROR)")
+                    
+                                contador2 = contador2 + 1
+                    except Exception as e: print("       No se ha Encontrado el Atributo: ","'",atributo,"'"," :(  <-----(ERROR)")
                     contador = contador +1
-                if ponerPuntos==True: print("......................................") 
+                            
+                if ponerPuntos==True: print(".......................................................................................................") 
                 else: ponerPuntos=False
                 contador3 = contador3 + 1
         
         else:
-            print("Ha ocurrido un error")
+            print("No se Encontro el Comando DONDE")
 
     if comand.lower() == comandSeleccionarAll.lower(): #verificar comando SELECCIONAR*
 
@@ -189,5 +206,6 @@ while salir==False:
     def str_to_bool(dato):   #para convertir el dato de texto activo a bool
         if dato == "true":
             return True
-        else:
+        if dato == "false": 
             return False
+        

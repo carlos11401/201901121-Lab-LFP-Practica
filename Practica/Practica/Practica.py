@@ -1,8 +1,10 @@
 import json
 import sys
 import re
+import webbrowser
+import os
 
-print('--------------------> Bienvenido usa Algun Comando <------------------------  ') 
+print('-----------------------> Bienvenido usa Algun Comando <------------------------------') 
 print('\n(CARGAR)-(SELECCIONAR)-(SELECCIONAR*)-(SUMA)-(MAXIMO)-(MINIMO)-(REPORTAR)-(SALIR) \n')
 salir = False
 while salir==False:
@@ -21,6 +23,8 @@ while salir==False:
     comandMax = "maximo"
     comandMin = "minimo"
     comandSuma = "suma"
+    comandReportar = "reportar"
+    comandSalir = "salir"
     
     try:
         if comand.lower() == comandCargar.lower():         #verificar comando CARGAR
@@ -107,19 +111,19 @@ while salir==False:
             print("\nNombre           Edad       Activo       Promedio")
 
             contador2 = 0
-        
             while contador2 < len(listaArchivos):
                 archivoJSON = listaArchivos[contador2] #recorriendo los archivos
                 cantidadRegistros = len(archivoJSON)   #numero de registros
 
                 contador = 0
-
                 while contador < cantidadRegistros:    #recorriendo los registros de cada archivo
                     registro = archivoJSON[contador]      #en var "registro" estaran los registro de los archivos
                     print(registro["nombre"],'        ',registro["edad"],'       ',registro["activo"],'       ',registro["promedio"])
                     contador= contador + 1
                 contador2 = contador2 + 1
+
             print("")
+
         if comand.lower() == comandMax.lower():         #verificar comando MAXIMO
             if len(ListaTextoComando) > 2:
                 print("       Ha Ocurrido un Error con el Atributo :(  <-----(ERROR)")
@@ -194,7 +198,7 @@ while salir==False:
 
                 print("\nSuma de ",atributo," : ",sumaAtributos,"\n")
 
-        if comand.lower() == comandCuenta.lower():         #verificar comando
+        if comand.lower() == comandCuenta.lower():         #verificar comando CUENTA
 
             contador = 0
             cantidadRegistros = 0
@@ -205,7 +209,100 @@ while salir==False:
 
             print("\nCantidad de Registros: ",cantidadRegistros,"\n")
 
-        if ListaTextoComando[0] == "SALIR":
+        if comand.lower() == comandReportar.lower():         #verificar comando REPORTAR
+            if len(ListaTextoComando) > 2:
+                print("\nHa Ocurrido un Error :(\n")
+            else:
+                numeroDeRegistrosUsuario = int(ListaTextoComando[1])  #numero de registros que quiere el usuario
+                contadorRegistrosAcumulados = 0     #esta variable contara los registros que se vayan acumulando para generar el html
+
+                # en esas listas se guardaran los datos de los atributos
+                listaDatosRegistrosNombre = []   
+                listaDatosRegistrosEdad = []
+                listaDatosRegistrosActivo = []
+                listaDatosRegistrosPromedio = []
+
+                contador2 = 0
+                while contador2 < len(listaArchivos):
+                    archivoJSON = listaArchivos[contador2] #recorriendo los archivos
+                    cantidadRegistros = len(archivoJSON)   #numero de registros
+
+                    #contadorRegistrosAcumulados = contadorRegistrosAcumulados + cantidadRegistros   #acumulando los registros que encuentre por cada archivo
+                    
+                    contador = 0
+                    while contador < cantidadRegistros:    #recorriendo los registros de cada archivo
+
+                        if contadorRegistrosAcumulados < numeroDeRegistrosUsuario:
+
+                            registro = archivoJSON[contador]      #en var "registro" estaran los registro de los archivos
+                            listaDatosRegistrosNombre.append(registro['nombre'])
+                            listaDatosRegistrosEdad.append(registro['edad'])
+                            listaDatosRegistrosActivo.append(registro['activo'])
+                            listaDatosRegistrosPromedio.append(registro['promedio'])
+
+                            contador= contador + 1
+                            contadorRegistrosAcumulados = contadorRegistrosAcumulados + 1
+                        else: 
+                            contador = contador + cantidadRegistros
+                            contado2 = contador2 + len(listaArchivos)
+
+                    contador2 = contador2 + 1
+
+                print("")
+
+                contador3 = 0
+                guardarRegistro=""
+                while contador3 < numeroDeRegistrosUsuario:
+
+                    guardarRegistro=guardarRegistro+f"<tr><td>{listaDatosRegistrosNombre[contador3]}</td><td>{listaDatosRegistrosEdad[contador3]}</td><td>{listaDatosRegistrosActivo[contador3]}</td><td>{listaDatosRegistrosPromedio[contador3]}</td></tr>"
+                    contador3 = contador3 + 1
+
+                myFile = open("registros.html", "w")
+                docHTML = f"""
+                <DOCTYPE html>
+                    <html>
+                    <head>
+	                    <title>REGISTROS</title>
+	                    <link rel="stylesheet" type="text/css" href="plantilla.css">
+                    </head>
+                    <body>
+                        <div class="container">
+		                    <table>
+			                    <thead>
+				                    <tr>
+					                    <td>nombre</td>
+                                        <td>edad</td>
+                                        <td>activo</td>
+                                        <td>saldo</td>
+				                    </tr>
+			                    </thead> 
+                            </table>
+                            <table>
+			                    <thead>
+			                    </thead> 
+                                </tbody>
+                                    <tr>
+					                    <td>---------------   ---------------   ---------------   ---------------</td>
+				                    </tr>
+			                    </tbody>
+                            </table>
+                            <table>
+                                <thead>	 
+                                </tbody>
+                                    <tr>{guardarRegistro}</tr>
+			                    </tbody>
+		                    </table>
+                    </div>
+                    </body>
+                    </html>
+                    """
+
+                myFile.write(docHTML)
+                myFile.close()
+                webbrowser.open_new_tab("registros.html")
+                print('-----------------------> Archivo HTML Creado con Exito :) <------------------------------') 
+
+        if comand.lower() == comandSalir.lower():         #verificar comando SALIR
             break
 
     except Exception as e: print("\n       Ha Ocurrido un Error :)  <-----(ERROR)\n")

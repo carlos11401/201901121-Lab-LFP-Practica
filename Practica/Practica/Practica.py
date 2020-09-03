@@ -173,7 +173,7 @@ while salir==False:
                         contador3 = contador3 + 1
 
                     listaNumeros = sorted(listaNumeros)   #se ordeno la lista, donde el valor MIN esta en la primera posicion
-                    print("\n-->",atributo," MIN : ",listaNumeros[0],"\n")
+                    print("\n--->",atributo," MIN : ",listaNumeros[0],"\n")
                 except Exception as e: print("\n       Ha Ocurrido un Error :(  <-----(ERROR)\n")
 
         if comand.lower() == comandSuma.lower():         #verificar comando SUMA
@@ -196,7 +196,7 @@ while salir==False:
                         contador = contador + 1
                     contador3 = contador3 + 1
 
-                print("\nSuma de ",atributo," : ",sumaAtributos,"\n")
+                print("\n---> Suma de ",atributo," : ",sumaAtributos,"\n")
 
         if comand.lower() == comandCuenta.lower():         #verificar comando CUENTA
 
@@ -207,7 +207,7 @@ while salir==False:
                 cantidadRegistros = cantidadRegistros + len(archivoJSON)   #numero de registros
                 contador = contador + 1
 
-            print("\nCantidad de Registros: ",cantidadRegistros,"\n")
+            print("\n---> Cantidad de Registros: ",cantidadRegistros,"\n")
 
         if comand.lower() == comandReportar.lower():         #verificar comando REPORTAR
             if len(ListaTextoComando) > 2:
